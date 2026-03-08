@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OzzyTattss · Tattoo Artist</title>
+    <!-- Fuentes: Serif elegante para títulos, Sans para texto -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* ===== VARIABLES ===== */
+        :root {
+            --color-bg: #0a0a0a;
+            --color-surface: #111111;
+            --color-surface-light: #1a1a1a;
+            --color-accent: #c7a45d;
+            --color-accent-dim: #a8894a;
+            --color-text: #e5e5e5;
+            --color-text-muted: #9ca3af;
+            --color-border: #2a2a2a;
+            --font-serif: 'Cormorant Garamond', serif;
+            --font-sans: 'Inter', sans-serif;
+            --transition: all 0.3s ease;
+            --shadow: 0 20px 30px -15px rgba(0,0,0,0.7);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--color-bg);
+            font-family: var(--font-sans);
+            color: var(--color-text);
+            line-height: 1.5;
+            position: relative;
+        }
+
+        /* ===== PALABRA DE FONDO (WATERMARK) ===== */
+        body::before {
+            content: "OZZYTATTSS";
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-5deg);
+            font-family: var(--font-serif);
+            font-size: 15vw;
+            font-weight: 700;
+            color: rgba(199, 164, 93, 0.03);
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: -1;
+            letter-spacing: 20px;
+            text-transform: uppercase;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===== HEADER / PERFIL ===== */
+        .profile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .profile-image-wrapper {
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-image {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--color-accent);
+            padding: 4px;
+            background-color: var(--color-surface);
+            transition: var(--transition);
+        }
+
+        .profile-image:hover {
+            transform: scale(1.02);
+            border-color: #e0b870;
+        }
+
+        .profile-name {
+            font-family: var(--font-serif);
+            font-size: 2.8rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: #ffffff;
+            margin-bottom: 0.25rem;
+            line-height: 1.2;
+        }
+
+        .profile-title {
+            font-size: 1.1rem;
+            color: var(--color-accent);
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 0.75rem;
+        }
+
+        .profile-bio {
+            color: var(--color-text-muted);
+            font-size: 1rem;
+            font-weight: 300;
+        }
+
+        /* ===== FEATURED SECTION (SIEMPRE VISIBLE) ===== */
+        .featured-section {
+            margin: 3rem 0 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header h2 {
+            font-family: var(--font-serif);
+            font-size: 2rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-right: 1rem;
+        }
+
+        .section-header-line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--color-accent), transparent);
+        }
+
+        .featured-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .featured-item {
+            position: relative;
+            aspect-ratio: 4 / 5;
+            overflow: hidden;
+            border: 1px solid var(--color-border);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .featured-item:hover {
+            transform: scale(1.02);
+            border-color: var(--color-accent);
+            box-shadow: var(--shadow);
+            z-index: 10;
+        }
+
+        .featured-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .featured-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .featured-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--color-accent);
+            color: var(--color-bg);
+            padding: 0.25rem 1rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 2;
+        }
+
+        .featured-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            padding: 2rem 1rem 1rem;
+            color: white;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .featured-item:hover .featured-info {
+            opacity: 1;
+        }
+
+        .featured-info h3 {
+            font-family: var(--font-serif);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.15rem;
+        }
+
+        .featured-info p {
+            font-size: 0.8rem;
+            color: var(--color-accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ===== CATEGORÍAS CON SCROLL HORIZONTAL ===== */
+        .categories-wrapper {
+            margin: 2rem 0 1.5rem;
+            position: relative;
+        }
+
+        .categories-scroll {
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+            scrollbar-width: thin;
+            scrollbar-color: var(--color-accent) var(--color-surface);
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .categories-scroll::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .categories-scroll::-webkit-scrollbar-track {
+            background: var(--color-surface);
+        }
+
+        .categories-scroll::-webkit-scrollbar-thumb {
+            background: var(--color-accent);
+            border-radius: 4px;
+        }
+
+        .category-btn {
+            background: transparent;
+            border: 1px solid var(--color-border);
+            color: var(--color-text-muted);
+            padding: 0.6rem 1.8rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+            border-radius: 30px;
+        }
+
+        .category-btn:hover {
+            border-color: var(--color-accent);
+            color: var(--color-accent);
+        }
+
+        .category-btn.active {
+            background: var(--color-accent);
+            color: var(--color-bg);
+            border-color: var(--color-accent);
+        }
+
+        /* ===== GALERÍA PRINCIPAL (GRID 2x3) ===== */
+        .gallery-section {
+            margin: 2rem 0 3rem;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.2rem;
+        }
+
+        .gallery-item {
+            position: relative;
+            aspect-ratio: 4 / 5;
+            overflow: hidden;
+            border: 1px solid var(--color-border);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.02);
+            border-color: var(--color-accent);
+            box-shadow: var(--shadow);
+            z-index: 10;
+        }
+
+        .gallery-item img,
+        .gallery-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .gallery-item:hover img,
+        .gallery-item:hover video {
+            transform: scale(1.05);
+        }
+
+        .gallery-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            padding: 2rem 0.8rem 0.8rem;
+            color: white;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .gallery-item:hover .gallery-info {
+            opacity: 1;
+        }
+
+        .gallery-info h3 {
+            font-family: var(--font-serif);
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.1rem;
+        }
+
+        .gallery-info p {
+            font-size: 0.7rem;
+            color: var(--color-accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ===== BOTÓN DE RESERVA ===== */
+        .booking-wrapper {
+            text-align: center;
+            margin: 3rem 0 2rem;
+        }
+
+        .booking-button {
+            display: inline-block;
+            background: transparent;
+            color: var(--color-text);
+            border: 2px solid var(--color-accent);
+            padding: 1rem 3.5rem;
+            font-size: 1.1rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .booking-button:hover {
+            background: var(--color-accent);
+            color: var(--color-bg);
+        }
+
+        /* ===== UBICACIÓN Y REDES ===== */
+        .location {
+            text-align: center;
+            margin: 2rem 0 1.5rem;
+            padding: 1.5rem 0;
+            border-top: 1px solid var(--color-border);
+        }
+
+        .location p {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            color: var(--color-text-muted);
+            font-size: 1rem;
+        }
+
+        .location svg {
+            width: 18px;
+            height: 18px;
+            fill: var(--color-accent);
+        }
+
+        .location a {
+            color: var(--color-text);
+            text-decoration: none;
+            border-bottom: 1px dotted var(--color-border);
+            transition: var(--transition);
+        }
+
+        .location a:hover {
+            color: var(--color-accent);
+        }
+
+        .social {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1.5rem 0;
+        }
+
+        .social a {
+            color: var(--color-text-muted);
+            transition: var(--transition);
+        }
+
+        .social a:hover {
+            color: var(--color-accent);
+        }
+
+        .social svg {
+            width: 22px;
+            height: 22px;
+            fill: currentColor;
+        }
+
+        .footer {
+            text-align: center;
+            padding-top: 1.5rem;
+            color: var(--color-text-muted);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--color-border);
+        }
+
+        /* ===== LIGHTBOX ===== */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.98);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .lightbox.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .lightbox-content {
+            max-width: 90vw;
+            max-height: 85vh;
+            position: relative;
+        }
+
+        .lightbox-content img,
+        .lightbox-content video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            font-size: 2.5rem;
+            color: #fff;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 10px;
+            line-height: 1;
+        }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none;
+        }
+
+        .lightbox-nav button {
+            pointer-events: auto;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            font-size: 1.8rem;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .lightbox-nav button:hover {
+            background: var(--color-accent);
+            color: var(--color-bg);
+        }
+
+        .lightbox-caption {
+            position: absolute;
+            bottom: -30px;
+            left: 0;
+            color: white;
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 900px) {
+            .featured-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .profile-name {
+                font-size: 2.2rem;
+            }
+            .featured-grid {
+                grid-template-columns: 1fr;
+            }
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+            .container {
+                padding: 1rem;
+            }
+            body::before {
+                font-size: 20vw;
+                letter-spacing: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- PERFIL -->
+        <div class="profile">
+            <div class="profile-image-wrapper">
+                <img class="profile-image" src="Images/Osvaldo/FotoPerfil.PNG" alt="OzzyTattss">
+            </div>
+            <h1 class="profile-name">OzzyTattss</h1>
+            <div class="profile-title">Tattoo Artist</div>
+            <div class="profile-bio">Healed work on the highlights</div>
+        </div>
+
+        <!-- FEATURED WORKS (SIEMPRE VISIBLE) -->
+        <div class="featured-section">
+            <div class="section-header">
+                <h2>Featured</h2>
+                <div class="section-header-line"></div>
+            </div>
+            <div class="featured-grid">
+                <!-- Featured 1 -->
+                <div class="featured-item" data-type="image" data-src="images/featured1.jpg" data-title="Dragon sleeve" data-year="2026" data-category="japanese">
+                    <img src="images/featured1-thumb.jpg" alt="Dragon sleeve" loading="lazy">
+                    <div class="featured-badge">Featured</div>
+                    <div class="featured-info">
+                        <h3>Dragon sleeve</h3>
+                        <p>2026 · Japanese</p>
+                    </div>
+                </div>
+                <!-- Featured 2 -->
+                <div class="featured-item" data-type="image" data-src="images/featured2.jpg" data-title="Portrait study" data-year="2026" data-category="realism">
+                    <img src="images/featured2-thumb.jpg" alt="Portrait" loading="lazy">
+                    <div class="featured-badge">Featured</div>
+                    <div class="featured-info">
+                        <h3>Portrait study</h3>
+                        <p>2026 · Realism</p>
+                    </div>
+                </div>
+                <!-- Featured 3 -->
+                <div class="featured-item" data-type="image" data-src="images/featured3.jpg" data-title="Floral composition" data-year="2025" data-category="bng">
+                    <img src="images/featured3-thumb.jpg" alt="Floral" loading="lazy">
+                    <div class="featured-badge">Featured</div>
+                    <div class="featured-info">
+                        <h3>Floral composition</h3>
+                        <p>2025 · Black & Grey</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CATEGORÍAS CON SCROLL HORIZONTAL -->
+        <div class="categories-wrapper">
+            <div class="categories-scroll">
+                <button class="category-btn active" data-filter="all">All</button>
+                <button class="category-btn" data-filter="bng">Black & Grey</button>
+                <button class="category-btn" data-filter="color">Color</button>
+                <button class="category-btn" data-filter="japanese">Japanese</button>
+                <button class="category-btn" data-filter="realism">Realism</button>
+                <button class="category-btn" data-filter="originals">Originals</button>
+                <button class="category-btn" data-filter="small">Small pieces</button>
+                <!-- Puedes añadir más categorías aquí y se desplazarán -->
+            </div>
+        </div>
+
+        <!-- GALERÍA PRINCIPAL (2x3 = 6 PROYECTOS) -->
+        <div class="gallery-section">
+            <div class="gallery-grid" id="gallery-grid">
+                <!-- Los items se generan aquí -->
+            </div>
+        </div>
+
+        <!-- BOTÓN DE RESERVA -->
+        <div class="booking-wrapper">
+            <a href="#" class="booking-button">Book your session</a>
+        </div>
+
+        <!-- UBICACIÓN Y REDES -->
+        <div class="location">
+            <p>
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zM7 9c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1-.25 1.94-.68 2.77L8.24 5.86C7.81 6.69 7 7.5 7 9z"/>
+                </svg>
+                <a href="https://www.google.com/maps/search/?api=1&query=726+Lakeshore+Rd+E+Mississauga+ON+L5G+Canada" target="_blank">726 Lakeshore Rd E, Mississauga, ON L5G</a>
+            </p>
+        </div>
+
+        <div class="social">
+            <a href="#" target="_blank">
+                <svg viewBox="0 0 24 24">
+                    <path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2zm-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6zm9.65 1.5a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/>
+                </svg>
+            </a>
+            <a href="#" target="_blank">
+                <svg viewBox="0 0 24 24">
+                    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.24a6.34 6.34 0 0 0 10.86-4.08v-6.7a5.07 5.07 0 0 0 3.77 1.47v-4.2z"/>
+                </svg>
+            </a>
+            <a href="#" target="_blank">
+                <svg viewBox="0 0 24 24">
+                    <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9c0-3.31 2.69-6 6-6 1.66 0 3.22.55 4.47 1.47L18 7.5c-.86-.73-1.96-1.17-3.17-1.17-2.65 0-4.83 2.03-4.83 4.53v3h3v3h-3v6.8c4.56-.93 8-4.96 8-9.8z"/>
+                </svg>
+            </a>
+        </div>
+
+        <div class="footer">
+            © 2026 OzzyTattss · Canada
+        </div>
+    </div>
+
+    <!-- LIGHTBOX -->
+    <div class="lightbox" id="lightbox">
+        <div class="lightbox-content">
+            <button class="lightbox-close" id="lightbox-close">&times;</button>
+            <div class="lightbox-nav">
+                <button id="lightbox-prev">‹</button>
+                <button id="lightbox-next">›</button>
+            </div>
+            <div id="lightbox-media"></div>
+            <div class="lightbox-caption" id="lightbox-caption"></div>
+        </div>
+    </div>
+
+    <!-- SCRIPT PARA FILTROS, GALERÍA Y LIGHTBOX -->
+    <script>
+        (function() {
+            // DATOS DE LOS PROYECTOS (AQUÍ AÑADES LOS TUYOS)
+            const allProjects = [
+                // Black & Grey (6 proyectos para llenar 2x3)
+                { category: 'bng', type: 'image', src: 'images/bng1.jpg', thumb: 'images/bng1-thumb.jpg', title: 'Geometric sleeve', year: '2026' },
+                { category: 'bng', type: 'image', src: 'images/bng2.jpg', thumb: 'images/bng2-thumb.jpg', title: 'Shading study', year: '2025' },
+                { category: 'bng', type: 'image', src: 'images/bng3.jpg', thumb: 'images/bng3-thumb.jpg', title: 'Abstract pattern', year: '2026' },
+                { category: 'bng', type: 'image', src: 'images/bng4.jpg', thumb: 'images/bng4-thumb.jpg', title: 'Traditional skull', year: '2025' },
+                { category: 'bng', type: 'image', src: 'images/bng5.jpg', thumb: 'images/bng5-thumb.jpg', title: 'Mandala', year: '2026' },
+                { category: 'bng', type: 'image', src: 'images/bng6.jpg', thumb: 'images/bng6-thumb.jpg', title: 'Portrait study', year: '2025' },
+                
+                // Color
+                { category: 'color', type: 'image', src: 'images/color1.jpg', thumb: 'images/color1-thumb.jpg', title: 'Watercolor koi', year: '2026' },
+                { category: 'color', type: 'image', src: 'images/color2.jpg', thumb: 'images/color2-thumb.jpg', title: 'Neo-traditional', year: '2025' },
+                { category: 'color', type: 'image', src: 'images/color3.jpg', thumb: 'images/color3-thumb.jpg', title: 'Colorful dragon', year: '2026' },
+                { category: 'color', type: 'image', src: 'images/color4.jpg', thumb: 'images/color4-thumb.jpg', title: 'Floral color', year: '2025' },
+                { category: 'color', type: 'image', src: 'images/color5.jpg', thumb: 'images/color5-thumb.jpg', title: 'Animal portrait', year: '2026' },
+                { category: 'color', type: 'image', src: 'images/color6.jpg', thumb: 'images/color6-thumb.jpg', title: 'Fantasy', year: '2025' },
+                
+                // Japanese
+                { category: 'japanese', type: 'image', src: 'images/jap1.jpg', thumb: 'images/jap1-thumb.jpg', title: 'Hannya mask', year: '2026' },
+                { category: 'japanese', type: 'image', src: 'images/jap2.jpg', thumb: 'images/jap2-thumb.jpg', title: 'Kirin', year: '2025' },
+                { category: 'japanese', type: 'image', src: 'images/jap3.jpg', thumb: 'images/jap3-thumb.jpg', title: 'Koi fish', year: '2026' },
+                { category: 'japanese', type: 'image', src: 'images/jap4.jpg', thumb: 'images/jap4-thumb.jpg', title: 'Dragon', year: '2025' },
+                { category: 'japanese', type: 'image', src: 'images/jap5.jpg', thumb: 'images/jap5-thumb.jpg', title: 'Foo dog', year: '2026' },
+                { category: 'japanese', type: 'image', src: 'images/jap6.jpg', thumb: 'images/jap6-thumb.jpg', title: 'Wave', year: '2025' },
+                
+                // Realism
+                { category: 'realism', type: 'image', src: 'images/real1.jpg', thumb: 'images/real1-thumb.jpg', title: 'Hyperrealistic eye', year: '2026' },
+                { category: 'realism', type: 'image', src: 'images/real2.jpg', thumb: 'images/real2-thumb.jpg', title: 'Celebrity portrait', year: '2025' },
+                { category: 'realism', type: 'image', src: 'images/real3.jpg', thumb: 'images/real3-thumb.jpg', title: 'Wildlife', year: '2026' },
+                { category: 'realism', type: 'image', src: 'images/real4.jpg', thumb: 'images/real4-thumb.jpg', title: 'Mechanical', year: '2025' },
+                { category: 'realism', type: 'image', src: 'images/real5.jpg', thumb: 'images/real5-thumb.jpg', title: 'Religious', year: '2026' },
+                { category: 'realism', type: 'image', src: 'images/real6.jpg', thumb: 'images/real6-thumb.jpg', title: 'Nature', year: '2025' },
+                
+                // Originals
+                { category: 'originals', type: 'image', src: 'images/original1.jpg', thumb: 'images/original1-thumb.jpg', title: 'Original design', year: '2026' },
+                { category: 'originals', type: 'image', src: 'images/original2.jpg', thumb: 'images/original2-thumb.jpg', title: 'Sketchbook series', year: '2025' },
+                { category: 'originals', type: 'image', src: 'images/original3.jpg', thumb: 'images/original3-thumb.jpg', title: 'Custom piece', year: '2026' },
+                { category: 'originals', type: 'image', src: 'images/original4.jpg', thumb: 'images/original4-thumb.jpg', title: 'Personal work', year: '2025' },
+                { category: 'originals', type: 'image', src: 'images/original5.jpg', thumb: 'images/original5-thumb.jpg', title: 'Experimental', year: '2026' },
+                { category: 'originals', type: 'image', src: 'images/original6.jpg', thumb: 'images/original6-thumb.jpg', title: 'Flash sheet', year: '2025' },
+                
+                // Small
+                { category: 'small', type: 'image', src: 'images/small1.jpg', thumb: 'images/small1-thumb.jpg', title: 'Minimalist', year: '2026' },
+                { category: 'small', type: 'image', src: 'images/small2.jpg', thumb: 'images/small2-thumb.jpg', title: 'Fine line', year: '2025' },
+                { category: 'small', type: 'image', src: 'images/small3.jpg', thumb: 'images/small3-thumb.jpg', title: 'Micro realism', year: '2026' },
+                { category: 'small', type: 'image', src: 'images/small4.jpg', thumb: 'images/small4-thumb.jpg', title: 'Lettering', year: '2025' },
+                { category: 'small', type: 'image', src: 'images/small5.jpg', thumb: 'images/small5-thumb.jpg', title: 'Symbols', year: '2026' },
+                { category: 'small', type: 'image', src: 'images/small6.jpg', thumb: 'images/small6-thumb.jpg', title: 'Tiny tattoo', year: '2025' }
+            ];
+
+            // Elementos del DOM
+            const galleryGrid = document.getElementById('gallery-grid');
+            const categoryBtns = document.querySelectorAll('.category-btn');
+            const lightbox = document.getElementById('lightbox');
+            const lightboxMedia = document.getElementById('lightbox-media');
+            const lightboxCaption = document.getElementById('lightbox-caption');
+            const closeBtn = document.getElementById('lightbox-close');
+            const prevBtn = document.getElementById('lightbox-prev');
+            const nextBtn = document.getElementById('lightbox-next');
+            
+            // Estado
+            let currentCategory = 'all';
+            let currentProjects = [];
+            let currentIndex = 0;
+
+            // Función para renderizar la galería
+            function renderGallery(category) {
+                // Filtrar proyectos (máximo 6 para 2x3)
+                let filtered = category === 'all' 
+                    ? allProjects 
+                    : allProjects.filter(p => p.category === category);
+                
+                // Limitar a 6 para mantener grid 2x3 lleno
+                filtered = filtered.slice(0, 6);
+                currentProjects = filtered;
+
+                // Generar HTML
+                galleryGrid.innerHTML = filtered.map(project => `
+                    <div class="gallery-item" 
+                         data-type="${project.type}" 
+                         data-src="${project.src}" 
+                         data-title="${project.title}" 
+                         data-year="${project.year}"
+                         data-category="${project.category}">
+                        <img src="${project.thumb}" alt="${project.title}" loading="lazy">
+                        <div class="gallery-info">
+                            <h3>${project.title}</h3>
+                            <p>${project.year} · ${getCategoryName(project.category)}</p>
+                        </div>
+                    </div>
+                `).join('');
+
+                // Reasignar eventos a los nuevos items
+                attachGalleryEvents();
+            }
+
+            // Helper para nombre de categoría
+            function getCategoryName(cat) {
+                const names = {
+                    'bng': 'Black & Grey',
+                    'color': 'Color',
+                    'japanese': 'Japanese',
+                    'realism': 'Realism',
+                    'originals': 'Originals',
+                    'small': 'Small'
+                };
+                return names[cat] || cat;
+            }
+
+            // Asignar eventos a items de galería
+            function attachGalleryEvents() {
+                document.querySelectorAll('.gallery-item').forEach((item, idx) => {
+                    item.addEventListener('click', () => {
+                        openLightbox(idx);
+                    });
+                });
+            }
+
+            // LIGHTBOX
+            function openLightbox(index) {
+                if (!currentProjects.length) return;
+                currentIndex = index;
+                const project = currentProjects[currentIndex];
+
+                lightboxMedia.innerHTML = '';
+                if (project.type === 'image') {
+                    const img = document.createElement('img');
+                    img.src = project.src;
+                    img.alt = project.title;
+                    lightboxMedia.appendChild(img);
+                }
+
+                lightboxCaption.textContent = `${project.title} · ${project.year}`;
+                lightbox.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeLightbox() {
+                lightbox.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            function nextItem() {
+                if (!currentProjects.length) return;
+                currentIndex = (currentIndex + 1) % currentProjects.length;
+                const project = currentProjects[currentIndex];
+                
+                lightboxMedia.innerHTML = '';
+                const img = document.createElement('img');
+                img.src = project.src;
+                img.alt = project.title;
+                lightboxMedia.appendChild(img);
+                lightboxCaption.textContent = `${project.title} · ${project.year}`;
+            }
+
+            function prevItem() {
+                if (!currentProjects.length) return;
+                currentIndex = (currentIndex - 1 + currentProjects.length) % currentProjects.length;
+                const project = currentProjects[currentIndex];
+                
+                lightboxMedia.innerHTML = '';
+                const img = document.createElement('img');
+                img.src = project.src;
+                img.alt = project.title;
+                lightboxMedia.appendChild(img);
+                lightboxCaption.textContent = `${project.title} · ${project.year}`;
+            }
+
+            // FILTROS
+            categoryBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    categoryBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentCategory = btn.dataset.filter;
+                    renderGallery(currentCategory);
+                });
+            });
+
+            // Event listeners lightbox
+            closeBtn.addEventListener('click', closeLightbox);
+            prevBtn.addEventListener('click', prevItem);
+            nextBtn.addEventListener('click', nextItem);
+            
+            lightbox.addEventListener('click', (e) => {
+                if (e.target === lightbox) closeLightbox();
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (!lightbox.classList.contains('active')) return;
+                if (e.key === 'Escape') closeLightbox();
+                if (e.key === 'ArrowRight') nextItem();
+                if (e.key === 'ArrowLeft') prevItem();
+            });
+
+            // Inicializar
+            renderGallery('all');
+
+            // También asignar eventos a featured items
+            document.querySelectorAll('.featured-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const category = this.dataset.category;
+                    // Cambiar filtro a esa categoría
+                    categoryBtns.forEach(btn => {
+                        btn.classList.remove('active');
+                        if (btn.dataset.filter === category) {
+                            btn.classList.add('active');
+                        }
+                    });
+                    currentCategory = category;
+                    renderGallery(category);
+                    
+                    // Opcional: scroll suave a la galería
+                    document.querySelector('.gallery-section').scrollIntoView({ behavior: 'smooth' });
+                });
+            });
+        })();
+    </script>
+</body>
+</html>
