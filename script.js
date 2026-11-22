@@ -19,5 +19,3 @@
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
   const analytics = getAnalytics(app);
-
-  <script type="module" src="C:\Users\alexa\OneDrive\Escritorio\proyect\Pagina Osvaldo\Node\public\script.js"></script>
